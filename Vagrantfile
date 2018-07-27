@@ -2,11 +2,13 @@ Vagrant.configure('2') do |config|
   # Budgie desktop
   # config.vm.box = "pristine/ubuntu-budgie-18-x64"
   # Xubuntu desktop
-  config.vm.box = "acntech/xubuntu-developer"
+  # config.vm.box = "acntech/xubuntu-developer"
   # Pure Ubuntu cli
-  # config.vm.box = "ubuntu/bionic64"
+  # config.vm.box = "generic/ubuntu1604"
   # Linux Mint
-  # config.vm.box = "artem-sidorenko/mint-18.1-cinnamon"
+  # config.vm.box = "npalm/mint17-amd64-cinnamon"
+  # arch
+  config.vm.box = "archlinux/archlinux"
 
   config.vm.hostname = 'workstation-vm'
   config.vm.provider :virtualbox do |vb|

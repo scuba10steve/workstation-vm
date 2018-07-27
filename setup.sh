@@ -1,20 +1,13 @@
-function safe_install_package() {
-    if [[ ! $(which $1) ]]; then
-        sudo apt-get install -y $1
-    fi
-}
-
 function safe_install_packages {
-    local args=$@
-    local packages
-    for package in $args;
-    do
-        if [[ ! $(which $package) ]]; then
-            packages+=("$package")
-        fi
-    done
+    local args="$@"
 
-    cmd="sudo apt-get install -y $packages"
+    echo "packages to install: $args"
+    if [[ $release == *"arch-release"* ]]; then
+        cmd="sudo pacman -S $args --noconfirm"
+    elif [[ $release == *"lsb-release"* ]]; then
+        cmd="sudo apt-get install -y $args"
+    fi
+
     echo "Executing command... $cmd"
     exec $cmd
 }
@@ -34,17 +27,28 @@ function safe_install_script() {
     fi
 }
 
-sudo locale-gen "en_US.UTF-8"
-sudo dpkg-reconfigure -f noninteractive locales
-sudo dpkg-reconfigure -f noninteractive keyboard-configuration
+# sudo locale-gen "en_US.UTF-8"
 
-sudo apt-get update -y
-DEBIAN_FRONTEND=noninteractive sudo apt-get upgrade -y
+release=$(ls /etc/*-release)
+if [[ $release == *"arch-release"* ]]; then
+    echo "provisioning for arch"
+    sudo pacman -Syu --noconfirm
+    echo "Installing packages..." 
+    sudo pacman -S git jq curl gcc lightdm lightdm-gtk-greeter xfce4 --noconfirm
+    sudo sed -i.bak 's/#greeter-session=/greeter-session=lightdm-gtk-greeter/' /etc/lightdm/lightdm.conf
+    sudo systemctl enable lightdm.service
+    sudo systemctl restart lightdm
+    
+elif [[ $release == *"lsb-release"* ]]; then
+    echo "provisioning for debian based distros"
+    # sudo dpkg-reconfigure -f noninteractive locales
+    # sudo dpkg-reconfigure -f noninteractive keyboard-configuration
 
-echo "Installing packages..."
-safe_install_packages git jq curl
-# safe_install_package jq
-# safe_install_package curl
+    sudo apt-get update -y
+    DEBIAN_FRONTEND=noninteractive sudo apt-get upgrade -y
+    echo "Installing packages..." 
+    sudo apt-get install -y git jq curl gcc
+fi
 
 echo "Downloading && executing scripts..."
 if [[ ! -d "$HOME/miniconda" ]]; then 
