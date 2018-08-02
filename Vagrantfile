@@ -24,8 +24,10 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.provision "base_setup", type: "shell", path: "scripts/setup.sh", privileged: false
+  config.vm.provision "install_certs", type: "shell", path: "scripts/certificates.sh", privileged: false
   config.vm.provision :reload
   config.vm.provision "dev_tools", type: "shell", path: "scripts/dev-tools.sh", privileged: false
+  config.vm.provision "clone_personal_repos", type: "shell", path: "scripts/git/clone-github-repos.sh", privileged: false
   if config.vm.box == "archlinux/archlinux" 
     config.vm.provision "aur_packages", type: "shell", path: "scripts/arch/aur.sh", privileged: false
   end
