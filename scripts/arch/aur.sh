@@ -1,15 +1,23 @@
-if [[ ! -d $HOME/aur/ ]]; then
-    sudo mkdir -p $HOME/aur
+if [[ ! -d /home/vagrant/aur/ ]]; then
+    mkdir -p /home/vagrant/aur
 fi
 
-pushd $HOME/aur
+pushd /home/vagrant/aur
 
-    if [[ ! -d $HOME/aur/phoronix-test-suite/ ]]; then
-        git clone https://aur.archlinux.org/phoronix-test-suite.git
-    fi
+    for repo in $(cat /vagrant/scripts/arch/repos.txt); do
 
-    pushd phoronix-test-suite
-        makepkg -si
-    popd phoronix-test-suite
+        dirname=$(echo $(echo $repo | sed 's/https:\/\/aur.archlinux.org\///') | sed 's/.git//')
 
-popd $HOME/aur
+        if [[ ! -d $dirname ]]; then
+            git clone $repo
+        fi
+
+        pushd $dirname
+        git pull
+        if [[ ! $(makepkg -si --noconfirm) ]]; then
+            popd
+        else
+            popd
+        fi
+    done
+popd

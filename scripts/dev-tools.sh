@@ -18,10 +18,22 @@ elif [[ $release == *"lsb-release"* ]]; then
     sudo sh get-docker.sh
 fi
 
+TOOLBOX_VERSION="1.8.3678"
+
 if [[ ! -d /usr/bin/toolbox ]]; then
-    curl -fsSL https://download.jetbrains.com/toolbox/jetbrains-toolbox-1.8.3678.tar.gz -o toolbox.tar
+    curl -fsSL https://download.jetbrains.com/toolbox/jetbrains-toolbox-$TOOLBOX_VERSION.tar.gz -o toolbox.tar
 
     sudo mkdir -p /usr/bin/toolbox
     sudo tar -xvf toolbox.tar -C /usr/bin/toolbox 
+    sudo mv /usr/bin/toolbox/jetbrains-toolbox-$TOOLBOX_VERSION/* /usr/bin/toolbox/
+    sudo chown -R vagrant:vagrant /usr/bin/toolbox/*
     sudo rm -f toolbox.tar
+fi
+
+if [[ ! -d /home/vagrant/.sdkman/ ]]; then  
+    curl -s "https://get.sdkman.io" | bash
+else
+    source /home/vagrant/.sdkman/bin/sdkman-init.sh
+
+    sdk selfupdate
 fi

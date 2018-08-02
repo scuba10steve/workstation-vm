@@ -21,10 +21,13 @@ if [[ $release == *"arch-release"* ]]; then
     sudo pacman -Syu --noconfirm
     echo "Installing packages..." 
     sudo pacman -Rs virtualbox-guest-utils-nox --noconfirm
-    sudo pacman -S virtualbox-guest-utils virtualbox-guest-modules-arch git base-devel jq curl lightdm lightdm-gtk-greeter xfce4 xfce4-goodies xorg-server chromium --noconfirm
+    sudo pacman -S virtualbox-guest-utils virtualbox-guest-modules-arch git base-devel jq curl lightdm lightdm-gtk-greeter xfce4 xfce4-goodies xorg-server chromium unzip zip p7zip papirus-icon-theme netdata --noconfirm
+    sudo pacman -S numix-gtk-theme --noconfirm
     sudo sed -i.bak 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-gtk-greeter/' /etc/lightdm/lightdm.conf
     sudo sed -i.bak 's/logind-check-graphical=false/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
     sudo sed -i.bak 's/#autologin-user=/autologin-user=vagrant/' /etc/lightdm/lightdm.conf
+    sudo sed -i.bak 's/#DefaultLimitNOFILE=/DefaultLimitNOFILE=20000/' /etc/systemd/user.conf
+    sudo sed -i.bak 's/#DefaultLimitNOFILE=/DefaultLimitNOFILE=20000/' /etc/systemd/system.conf
     sudo groupadd autologin
     sudo gpasswd -a vagrant autologin
     sudo systemctl enable lightdm.service
@@ -42,6 +45,8 @@ elif [[ $release == *"lsb-release"* ]]; then
 fi
 
 echo "Downloading && executing scripts..."
-if [[ ! -d "$HOME/miniconda" ]]; then 
-    safe_install_script "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" "-b -p $HOME/miniconda"
+if [[ ! -d "/home/vagrant/miniconda" ]]; then 
+    safe_install_script "https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh" "-b -p /home/vagrant/miniconda"
 fi
+
+mkdir -p /home/vagrant/git/{work,playground,tmp}

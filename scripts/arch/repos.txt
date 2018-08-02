@@ -1,0 +1,5 @@
+https://aur.archlinux.org/phoronix-test-suite.git
+https://aur.archlinux.org/xfce-theme-greybird.git
+https://aur.archlinux.org/moka-icon-theme.git
+https://aur.archlinux.org/slack-desktop.git
+https://aur.archlinux.org/code.git

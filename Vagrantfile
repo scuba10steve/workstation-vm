@@ -13,8 +13,8 @@ Vagrant.configure('2') do |config|
   config.vm.hostname = 'workstation-vm'
   config.vm.provider :virtualbox do |vb|
     vb.gui = true
-    vb.memory = 8192
-    vb.cpus = 4
+    vb.memory = 6144
+    vb.cpus = 2
     vb.customize ["modifyvm", :id, "--monitorcount", "3"]
     # vb.customize ["modifyvm", :id, "--cpuexecutioncap", "100"]
     vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
@@ -23,7 +23,11 @@ Vagrant.configure('2') do |config|
     vb.customize ["modifyvm", :id, "--vram", "256"]
   end
 
-  config.vm.provision "base_setup", type: "shell", path: "scripts/setup.sh", privileged: true
-  config.vm.provision "dev_tools", type: "shell", path: "scripts/dev-tools.sh", privileged: true
-  config.vm.provision "cleanup", type: "shell", path: "scripts/cleanup.sh", privileged: false
+  config.vm.provision "base_setup", type: "shell", path: "scripts/setup.sh", privileged: false
+  config.vm.provision :reload
+  config.vm.provision "dev_tools", type: "shell", path: "scripts/dev-tools.sh", privileged: false
+  if config.vm.box == "archlinux/archlinux" 
+    config.vm.provision "aur_packages", type: "shell", path: "scripts/arch/aur.sh", privileged: false
+  end
+  config.vm.provision "cleanup", type: "shell", path: "scripts/cleanup.sh", privileged: true
 end
