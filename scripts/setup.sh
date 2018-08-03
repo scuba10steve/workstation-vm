@@ -21,21 +21,28 @@ if [[ $release == *"arch-release"* ]]; then
     sudo pacman -Syu --noconfirm
     echo "Installing packages..." 
     sudo pacman -Rs virtualbox-guest-utils-nox --noconfirm
-    sudo pacman -S virtualbox-guest-utils virtualbox-guest-modules-arch git base-devel jq curl lightdm lightdm-gtk-greeter xfce4 xfce4-goodies xorg-server chromium unzip zip p7zip papirus-icon-theme netdata --noconfirm
+    sudo pacman -S virtualbox-guest-utils virtualbox-guest-modules-arch git base-devel jq curl lightdm lightdm-gtk-greeter xfce4 xfce4-goodies xorg-server chromium unzip zip p7zip papirus-icon-theme netdata fuse2 --noconfirm
     sudo pacman -S numix-gtk-theme arc-gtk-theme --noconfirm
     sudo sed -i.bak 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-gtk-greeter/' /etc/lightdm/lightdm.conf
     sudo sed -i.bak 's/logind-check-graphical=false/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
     sudo sed -i.bak 's/#autologin-user=/autologin-user=vagrant/' /etc/lightdm/lightdm.conf
+    sudo sed -i.bak 's/#theme-name=/theme-name=Numix/' /etc/lightdm/lightdm-gtk-greeter.conf
+    sudo sed -i.bak 's/#icon-theme-name=/icon-theme-name=Numix/' /etc/lightdm/lightdm-gtk-greeter.conf
     sudo sed -i.bak 's/#DefaultLimitNOFILE=/DefaultLimitNOFILE=20000/' /etc/systemd/user.conf
     sudo sed -i.bak 's/#DefaultLimitNOFILE=/DefaultLimitNOFILE=20000/' /etc/systemd/system.conf
     sudo sed -i 's/Adwaita/Numix/' /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
     sudo cp /vagrant/assets/xfwm4.xml /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xfwm4.xml
     sudo sed -i 's/gnome/ePapirus/' /etc/xdg/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml
+    if [[ ! -f /home/vagrant/.config/xfce4/terminal/terminalrc ]]; then 
+        mkdir -p /home/vagrant/.config/xfce4/terminal
+        touch /home/vagrant/.config/xfce4/terminal/terminalrc
+        echo 'CellWidthScale=1.400000' > /home/vagrant/.config/xfce4/terminal/terminalrc
+    fi
     sudo groupadd autologin
     sudo gpasswd -a vagrant autologin
     sudo systemctl enable lightdm.service
     sudo systemctl restart lightdm
-    
+
 elif [[ $release == *"lsb-release"* ]]; then
     echo "provisioning for debian based distros"
     # sudo dpkg-reconfigure -f noninteractive locales

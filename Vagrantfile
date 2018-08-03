@@ -13,8 +13,8 @@ Vagrant.configure('2') do |config|
   config.vm.hostname = 'workstation-vm'
   config.vm.provider :virtualbox do |vb|
     vb.gui = true
-    vb.memory = 6144
-    vb.cpus = 2
+    vb.memory = 8192
+    vb.cpus = 4
     vb.customize ["modifyvm", :id, "--monitorcount", "3"]
     # vb.customize ["modifyvm", :id, "--cpuexecutioncap", "100"]
     vb.customize ["modifyvm", :id, "--accelerate3d", "on"]
@@ -25,7 +25,6 @@ Vagrant.configure('2') do |config|
 
   config.vm.provision "base_setup", type: "shell", path: "scripts/setup.sh", privileged: false
   config.vm.provision "install_certs", type: "shell", path: "scripts/certificates.sh", privileged: false
-  config.vm.provision :reload
   config.vm.provision "dev_tools", type: "shell", path: "scripts/dev-tools.sh", privileged: false
   config.vm.provision "clone_personal_repos", type: "shell", path: "scripts/git/clone-github-repos.sh", privileged: false
   if config.vm.box == "archlinux/archlinux" 

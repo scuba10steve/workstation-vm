@@ -18,7 +18,7 @@ elif [[ $release == *"lsb-release"* ]]; then
     sudo sh get-docker.sh
 fi
 
-TOOLBOX_VERSION="1.8.3678"
+TOOLBOX_VERSION="1.10.4088"
 
 if [[ ! -d /usr/bin/toolbox ]]; then
     curl -fsSL https://download.jetbrains.com/toolbox/jetbrains-toolbox-$TOOLBOX_VERSION.tar.gz -o toolbox.tar
@@ -28,6 +28,7 @@ if [[ ! -d /usr/bin/toolbox ]]; then
     sudo mv /usr/bin/toolbox/jetbrains-toolbox-$TOOLBOX_VERSION/* /usr/bin/toolbox/
     sudo chown -R vagrant:vagrant /usr/bin/toolbox/*
     sudo rm -f toolbox.tar
+    sudo rm -rf usr/bin/toolbox/jetbrains-toolbox-$TOOLBOX_VERSION/
 fi
 
 if [[ ! -d /home/vagrant/.sdkman/ ]]; then  
