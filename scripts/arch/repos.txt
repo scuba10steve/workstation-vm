@@ -4,3 +4,4 @@ https://aur.archlinux.org/faba-icon-theme.git
 https://aur.archlinux.org/moka-icon-theme.git
 https://aur.archlinux.org/slack-desktop.git
 https://aur.archlinux.org/visual-studio-code-bin.git
+https://aur.archlinux.org/qdirstat.git

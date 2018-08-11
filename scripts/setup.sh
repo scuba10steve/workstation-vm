@@ -20,9 +20,13 @@ if [[ $release == *"arch-release"* ]]; then
     echo "provisioning for arch"
     sudo pacman -Syu --noconfirm
     echo "Installing packages..." 
+    # Remove vbox utils without gui support, it's not compatible with the gui supported package
     sudo pacman -Rs virtualbox-guest-utils-nox --noconfirm
-    sudo pacman -S virtualbox-guest-utils virtualbox-guest-modules-arch git base-devel jq curl lightdm lightdm-gtk-greeter xfce4 xfce4-goodies xorg-server chromium unzip zip p7zip papirus-icon-theme netdata fuse2 --noconfirm
+    # Install ui stuff
+    sudo pacman -S virtualbox-guest-utils virtualbox-guest-modules-arch lightdm lightdm-gtk-greeter xfce4 xfce4-goodies xorg-server chromium papirus-icon-theme lxqt firefox-developer-edition --noconfirm
     sudo pacman -S numix-gtk-theme arc-gtk-theme --noconfirm
+    # Install initial dev tools
+    sudo pacman -S git base-devel jq curl unzip zip p7zip libreoffice-fresh meld netdata fuse2 atom --noconfirm
     sudo sed -i.bak 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-gtk-greeter/' /etc/lightdm/lightdm.conf
     sudo sed -i.bak 's/logind-check-graphical=false/logind-check-graphical=true/' /etc/lightdm/lightdm.conf
     sudo sed -i.bak 's/#autologin-user=/autologin-user=vagrant/' /etc/lightdm/lightdm.conf
